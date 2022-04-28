@@ -1,3 +1,3 @@
-# 200
-# https://leetcode.com/problems/number-of-islands/
+# 1254
+# https://leetcode.com/problems/number-of-closed-islands/
 

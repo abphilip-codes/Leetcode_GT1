@@ -1,1 +1,1 @@
-# Graph Theory I: Day 1 
+# Graph Theory I: Day 1

@@ -1,9 +1,8 @@
 # 200
 # https://leetcode.com/problems/number-of-islands/
 
-class Solution:      
-    def numIslands(self, grid: List[List[str]]) -> int:
-        def help(self, grid, z, y, m, n):
+class Solution:    
+    def help(self, grid, z, y, m, n):
             if(z<0 or z>=m or y<0 or y>=n): return
             if(grid[z][y]=="1"): grid[z][y] = "2" 
             else: return
@@ -12,6 +11,7 @@ class Solution:
             self.help(grid, z, y+1, m, n)
             self.help(grid, z, y-1, m, n)
 
+    def numIslands(self, grid: List[List[str]]) -> int:
         m, n = len(grid), len(grid[0])
         ans = 0
         for z in range(m):

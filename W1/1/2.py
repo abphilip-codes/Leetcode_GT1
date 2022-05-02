@@ -1,19 +1,22 @@
 # 200
 # https://leetcode.com/problems/number-of-islands/
 
-class Solution:
+class Solution:      
     def numIslands(self, grid: List[List[str]]) -> int:
-        r, c = len(grid), len(grid[0])
-        k, ans = set(), 0
-        def bfs(z,y):
-            if(z<0 or y<0 or z==r or y==c or 
-              (z,y) in k or grid[z][y]=="0"): return 
-            k.add((z,y))
-            for a,b in [[1,0],[-1,0],[0,1],[0,-1]]: bfs(z+a,y+b)
-                
-        for z in range(r):
-            for y in range(c):
-                if(grid[z][y]=="1" and (z,y) not in k):
-                    bfs(z,y)
+        def help(self, grid, z, y, m, n):
+            if(z<0 or z>=m or y<0 or y>=n): return
+            if(grid[z][y]=="1"): grid[z][y] = "2" 
+            else: return
+            self.help(grid, z+1, y, m, n)
+            self.help(grid, z-1, y, m, n)
+            self.help(grid, z, y+1, m, n)
+            self.help(grid, z, y-1, m, n)
+
+        m, n = len(grid), len(grid[0])
+        ans = 0
+        for z in range(m):
+            for y in range(n):
+                if(grid[z][y]=="1"):
                     ans+=1
+                    self.help(grid, z, y, m, n)
         return ans

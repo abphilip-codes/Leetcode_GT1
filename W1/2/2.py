@@ -1,22 +1,19 @@
 # 1254
 # https://leetcode.com/problems/number-of-closed-islands/
 
-class Solution:    
-    def help(self, grid, z, y, m, n):
-            if(z<0 or z>=m or y<0 or y>=n): return
-            if(grid[z][y]=="1"): grid[z][y] = "2" 
-            else: return
-            self.help(grid, z+1, y, m, n)
-            self.help(grid, z-1, y, m, n)
-            self.help(grid, z, y+1, m, n)
-            self.help(grid, z, y-1, m, n)
-
-    def numIslands(self, grid: List[List[str]]) -> int:
-        m, n = len(grid), len(grid[0])
-        ans = 0
-        for z in range(m):
-            for y in range(n):
-                if(grid[z][y]=="1"):
-                    ans+=1
-                    self.help(grid, z, y, m, n)
+class Solution:
+    def closedIsland(self, grid: List[List[int]]) -> int:
+        a, b = len(grid), len(grid[0])
+        arr, ans = [[0, 1], [0, -1], [1, 0], [-1, 0]], 0
+        def dfs(y, x, s):
+            grid[y][x] = 1
+            for k1, k2 in arr:
+                n, m = y+k1, x+k2
+                if(n>=a or n<0 or m>=b or m<0): s=0
+                else:
+                    if(grid[n][m] == 0 and not dfs(n, m, s)): s=0
+            return s
+        for z in range(a):
+            for y in range(b):
+                if(grid[z][y]==0): ans+=dfs(z, y, 1)
         return ans

@@ -11,8 +11,7 @@ class Solution:
                 while(arr):
                     r, c = arr[-1]
                     arr.pop(-1)
-                    if r<0 or r>=a or c<0 or c>=b or (r, c) in s or grid[r][c]!=1:
-                        continue
+                    if(r<0 or r>=a or c<0 or c>=b or (r, c) in s or grid[r][c]!=1): continue
                     k+=1
                     s.add((r, c))
                     arr.append((r-1, c))

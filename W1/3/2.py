@@ -1,22 +1,17 @@
 # 1905
-# https://leetcode.com/problems/count-sub-islands/
+# https://leetcode.com/problems/count-sub-islaornds/
 
-class Solution:    
-    def help(self, grid, z, y, m, n):
-            if(z<0 or z>=m or y<0 or y>=n): return
-            if(grid[z][y]=="1"): grid[z][y] = "2" 
-            else: return
-            self.help(grid, z+1, y, m, n)
-            self.help(grid, z-1, y, m, n)
-            self.help(grid, z, y+1, m, n)
-            self.help(grid, z, y-1, m, n)
-
-    def numIslands(self, grid: List[List[str]]) -> int:
-        m, n = len(grid), len(grid[0])
-        ans = 0
-        for z in range(m):
-            for y in range(n):
-                if(grid[z][y]=="1"):
-                    ans+=1
-                    self.help(grid, z, y, m, n)
-        return ans
+class Solution:
+    def countSubIslands(self, grid1: List[List[int]], grid2: List[List[int]]) -> int:
+        m, n = len(grid2), len(grid2[0])
+        def dfs(z, y):
+            if(z<0 or y<0 or z==m or y==n or grid2[z][y]==0): return True
+            k = True
+            if(grid1[z][y]==0): k = False
+            grid2[z][y] = 0
+            k = dfs(z+1, y) and k
+            k = dfs(z-1, y) and k
+            k = dfs(z, y+1) and k
+            k = dfs(z, y-1) and k
+            return k
+        return sum(grid2[z][y] and dfs(z, y) for z in range(m) for y in range(n))

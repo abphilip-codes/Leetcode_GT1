@@ -2,16 +2,26 @@
 # https://leetcode.com/problems/01-matrix/
 
 class Solution:
-    def countSubIslands(self, grid1: List[List[int]], grid2: List[List[int]]) -> int:
-        m, n = len(grid2), len(grid2[0])
-        def dfs(z, y):
-            if(z<0 or y<0 or z==m or y==n or grid2[z][y]==0): return True
-            k = True
-            if(grid1[z][y]==0): k = False
-            grid2[z][y] = 0
-            k = dfs(z+1, y) and k
-            k = dfs(z-1, y) and k
-            k = dfs(z, y+1) and k
-            k = dfs(z, y-1) and k
-            return k
-        return sum(grid2[z][y] and dfs(z, y) for z in range(m) for y in range(n))
+    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
+        m, n = len(mat), len(mat[0])
+        d = mat[:]
+        for z in range(m):
+            for y in range(n):
+                if(mat[z][y]!=0):
+                    if(z==0 and y==0): d[z][y] = 10000
+                    elif(z==0): d[z][y] = mat[z][y-1] + 1
+                    elif(y==0): d[z][y] = mat[z-1][y] + 1
+                    else: d[z][y] = min(mat[z-1][y], mat[z][y-1]) + 1
+
+        for z in range(m-1,-1,-1):
+            for y in range(n-1, -1, -1):
+                if(mat[z][y]!=0):
+                    if(z==m-1 and y==n-1):
+                        mat[z][y] = d[z][y]
+                    elif(z==m-1):
+                        mat[z][y] = min(d[z][y], 1+mat[z][y+1])
+                    elif(y==n-1):
+                        mat[z][y] = min(d[z][y], 1+mat[z+1][y])
+                    else:
+                        mat[z][y] = min(d[z][y], 1+min(mat[z+1][y], mat[z][y+1]))
+        return mat

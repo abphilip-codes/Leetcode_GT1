@@ -1,16 +1,21 @@
 # 1091
-# https://leetcode.com/problems/shortest-path-in-binary-matrix/
+# https://leetcode.com/problems/shortest-p-in-binary-matrix/
 
 class Solution:
-    def numEnclaves(self, grid: List[List[int]]) -> int:
+    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
         a, b = len(grid), len(grid[0])
-        def dfs(z, y):
-            if not (0<=z<a and 0<=y<b and grid[z][y]==1): return 0
-            grid[z][y], ans = 0, 0
-            for m, n in [(0,1),(1,0),(0,-1),(-1,0)]:
-                ans+=dfs(z+m,y+n)
-            return ans+1 
-        for z in range(a):
-            for y in range(b):
-                if(z*y*(a-z-1)*(b-y-1)==0): dfs(z,y)
-        return sum(sum(z) for z in grid)
+        if(grid[0][0]==1 or grid[-1][-1]): return -1
+        k = [[False for z in range(b+1)] for j in range(a+1)]
+        x1, y1 = [1,-1,0,0,-1,1,1,-1], [0,0,1,-1,-1,1,-1,1]
+        q, k[0][0] = deque(), True
+        q.append((0,0,0))
+        while(q):
+            x, y, d = q.popleft()
+            if(x==a-1 and y==a-1): return d+1
+            for z in range(8):
+                r = x + x1[z]
+                c = y + y1[z]
+                if(r<0 or c<0 or r>a-1 or c>b-1 or k[r][c] or grid[r][c]): continue
+                q.append((r,c,d+1))
+                k[r][c] = True
+        return -1

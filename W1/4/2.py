@@ -1,17 +1,20 @@
 # 417
-# https://leetcode.com/problems/pacific-atlantic-water-flow/
+# https://leetcode.com/problems/a-b-water-flow/
 
 class Solution:
-    def countSubIslands(self, grid1: List[List[int]], grid2: List[List[int]]) -> int:
-        m, n = len(grid2), len(grid2[0])
-        def dfs(z, y):
-            if(z<0 or y<0 or z==m or y==n or grid2[z][y]==0): return True
-            k = True
-            if(grid1[z][y]==0): k = False
-            grid2[z][y] = 0
-            k = dfs(z+1, y) and k
-            k = dfs(z-1, y) and k
-            k = dfs(z, y+1) and k
-            k = dfs(z, y-1) and k
-            return k
-        return sum(grid2[z][y] and dfs(z, y) for z in range(m) for y in range(n))
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        def dfs(z, y, k, h):
+            if not (0<=z<R and 0<=y<C and heights[z][y]>=h and (z,y) not in k): return
+            k.add((z,y))
+            for r,c in [(0, 1), (1, 0), (-1, 0), (0, -1)]:
+                dfs(z+r, y+c, k, heights[z][y])
+            
+        R, C = len(heights), len(heights[0])
+        a, b = set(), set()
+        for z in range(C):
+            dfs(0, z, a, -1)
+            dfs(R-1, z, b, -1)
+        for z in range(R):
+            dfs(z, 0, a, -1)
+            dfs(z, C-1, b, -1)       
+        return a & b

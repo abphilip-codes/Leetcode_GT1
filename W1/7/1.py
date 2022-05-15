@@ -1,21 +1,24 @@
 # 797
-# https://leetcode.com/problems/all-paths-from-source-to-target/
+# https://leetcode.com/problems/all-paths-from-start-to-target/
 
 class Solution:
-    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
-        a, b = len(grid), len(grid[0])
-        if(grid[0][0]==1 or grid[-1][-1]): return -1
-        k = [[False for z in range(b+1)] for j in range(a+1)]
-        x1, y1 = [1,-1,0,0,-1,1,1,-1], [0,0,1,-1,-1,1,-1,1]
-        q, k[0][0] = deque(), True
-        q.append((0,0,0))
-        while(q):
-            x, y, d = q.popleft()
-            if(x==a-1 and y==a-1): return d+1
-            for z in range(8):
-                r = x + x1[z]
-                c = y + y1[z]
-                if(r<0 or c<0 or r>a-1 or c>b-1 or k[r][c] or grid[r][c]): continue
-                q.append((r,c,d+1))
-                k[r][c] = True
-        return -1
+    def __init__(self):
+        self.paths = []
+        self.graph = {}
+
+    def make(self, graph):
+        for z, y in enumerate(graph):
+            self.graph[z] = y
+
+    def get(self, start, end, path):
+        if(start==end):
+            self.paths.append(path)
+            return
+
+        for z in self.graph[start]:
+            self.get(z, end, path + [z])
+            
+    def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:           
+        self.make(graph)
+        self.get(0, len(graph)-1, [0])
+        return self.paths

@@ -1,27 +1,21 @@
 # 841
-# https://leetcode.com/problems/keys-and-rooms/
+# https://leetcode.com/problems/y-and-rooms/
 
-class Solution:
-    def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
-        m, n = len(mat), len(mat[0])
-        d = mat[:]
-        for z in range(m):
-            for y in range(n):
-                if(mat[z][y]!=0):
-                    if(z==0 and y==0): d[z][y] = 10000
-                    elif(z==0): d[z][y] = mat[z][y-1] + 1
-                    elif(y==0): d[z][y] = mat[z-1][y] + 1
-                    else: d[z][y] = min(mat[z-1][y], mat[z][y-1]) + 1
+from collections import defaultdict
+class Solution:    
+    def __init__(self):
+        self.graph = defaultdict(list)
+        
+    def make(self, rooms):
+        for z, y in enumerate(rooms): self.graph[z] = y
+            
+    def get(self, rooms, room):
+        if not self.visited[room]:
+            self.visited[room] = True
+            for y in self.graph[room]: self.get(rooms, y)
 
-        for z in range(m-1,-1,-1):
-            for y in range(n-1, -1, -1):
-                if(mat[z][y]!=0):
-                    if(z==m-1 and y==n-1):
-                        mat[z][y] = d[z][y]
-                    elif(z==m-1):
-                        mat[z][y] = min(d[z][y], 1+mat[z][y+1])
-                    elif(y==n-1):
-                        mat[z][y] = min(d[z][y], 1+mat[z+1][y])
-                    else:
-                        mat[z][y] = min(d[z][y], 1+min(mat[z+1][y], mat[z][y+1]))
-        return mat
+    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
+        self.visited = [False] * len(rooms) 
+        self.make(rooms)
+        self.get(rooms, 0)
+        return all(self.visited)

@@ -1,21 +1,46 @@
 # 1319
 # https://leetcode.com/problems/number-of-operations-to-make-network-connected/
 
-from collections import defaultdict
-class Solution:    
-    def __init__(self):
-        self.graph = defaultdict(list)
+class Solution:
+    def makeConnected(self, n: int, connections: List[List[int]]) -> int:
+        self.extraConn = 0
+        self.parent = [-1 for _ in range(n)]        
+        for n1, n2 in connections:
+            self.Union(n1,n2)        
+        n_s = -1
+        for p in self.parent:
+            if p < 0:
+                n_s += 1                
+        if n_s <= self.extraConn:
+            return(n_s)        
+        return -1
+    
+    def Union(self, n1, n2):
+        p1, p2 = self.Find(n1,n2)        
         
-    def make(self, rooms):
-        for z, y in enumerate(rooms): self.graph[z] = y
+        if p1 != p2:            
+            if self.parent[p1] < self.parent[p2]:               
+                self.parent[p1] += self.parent[p2]
+                self.parent[n2] = p1
+                self.parent[p2] = p1
+                
+            else:
+                self.parent[p2] += self.parent[p1]
+                self.parent[n1] = p2
+                self.parent[p1] = p2
+                
+        else:            
+            self.extraConn += 1        
+        
+    def Find(self, n1, n2):
+        p1 = n1
+        p2 = n2        
+        while self.parent[p1] >= 0:
+            p1 = self.parent[n1]
+            n1 = p1
             
-    def get(self, rooms, room):
-        if not self.visited[room]:
-            self.visited[room] = True
-            for y in self.graph[room]: self.get(rooms, y)
-
-    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
-        self.visited = [False] * len(rooms) 
-        self.make(rooms)
-        self.get(rooms, 0)
-        return all(self.visited)
+        while self.parent[p2] >= 0:
+            p2 = self.parent[n2]
+            n2 = p2
+            
+        return (p1,p2)

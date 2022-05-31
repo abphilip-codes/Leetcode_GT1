@@ -2,16 +2,14 @@
 # https://leetcode.com/problems/time-needed-to-inform-all-employees/
 
 class Solution:
-    def findCircleNum(self, isConnected: List[List[int]]) -> int:
-        d = len(isConnected)
-        n, a, b = 0, set(), set(range(d))
-        while(b):
-            n+=1
-            a.add(b.pop())
-            while(a):
-                z = a.pop()
-                for y, t in enumerate(isConnected[z]):
-                    if t and y in b:
-                        a.add(y)
-                        b.remove(y)
-        return n
+    def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
+        k = [-1]*n
+        for z in range(n):
+            if(k[z]==-1):
+                k[z], t = 0, 0
+                while(z!=headID):
+                    z = manager[z]
+                    t += informTime[z]
+                    if(t>k[z]): k[z] = t
+                    else: break
+        return k[headID]

@@ -1,26 +1,27 @@
 # 847
 # https://leetcode.com/problems/shortest-path-visiting-all-nodes/
 
-from collections import defaultdict
+from math import inf
+from collections import deque
 class Solution:
-    def minReorder(self, n: int, connections: List[List[int]]) -> int:
-        self.graph = defaultdict(list)
-        self.count = 0
-        for edge in connections:
-            self.graph[edge[0]].append(edge[1])
-        self.visited = [0]*n
-        for z in range(n):
-            if not self.visited[z]: self.f(z)
-        return self.count
-    
-    
-    def f(self, start):
-        found = False
-        neighbors = self.graph[start]
-        self.visited[start] = 1
-        for neighbor in neighbors:
-            if not neighbor: found = True
-            if not self.visited[neighbor]:
-                found = self.f(neighbor)
-                if not found: self.count += 1
-        return found
+    def shortestPathLength(self, graph: List[List[int]]) -> int:
+        nodeCount = len(graph)
+        masks = [1 << z for z in range(nodeCount)]
+        allVisited = (1 << nodeCount) - 1
+        queue = deque([(z, masks[z]) for z in range(nodeCount)])
+        steps = 0
+        visited_states = [{masks[z]} for z in range(nodeCount)]
+        while(queue):
+            count = len(queue)
+            while(count):
+                currentNode, visited = queue.popleft()
+                if(visited == allVisited): return steps
+                for nb in graph[currentNode]:
+                    new_visited = visited | masks[nb]
+                    if(new_visited==allVisited): return steps + 1
+                    if(new_visited not in visited_states[nb]):
+                        visited_states[nb].add(new_visited)
+                        queue.append((nb, new_visited))
+                count-=1
+            steps+=1
+        return inf

@@ -1,7 +1,27 @@
 # 127
-# https://leetcode.com/problems/word-ladder/
+# https://leetcode.com/problems/x-ladder/
 
-import math
 class Solution:
-    def canMeasureWater(self, a: int, b: int, c: int) -> bool:
-        return False if(a+b<c) else True if(a+b==0) else not (c%math.gcd(a, b))
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        if endWord not in wordList: return 0
+        wordList = [beginWord] + wordList
+        d = {}
+        size = len(beginWord)
+        for x in wordList:
+            for z in range(size):
+                k = x[:z]+'*'+x[z+1:]
+                d[k] = ( d[k]  if k in d else []) + [x]        
+
+        q, s, ans = deque([beginWord]), set([beginWord]), 0
+        while len(q):
+            for z in range(len(q)):
+                c = q.popleft()
+                if(c==endWord): return ans+1
+                for z in range(size):
+                    k = c[:z]+'*'+c[z+1:]
+                    for y in d[k]:
+                        if y not in s:
+                            q.append(y)
+                            s.add(y)
+            ans+=1   
+        return 0

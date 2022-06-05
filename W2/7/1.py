@@ -1,24 +1,29 @@
-# 433
-# https://leetcode.com/problems/minimum-genetic-mutation/
+# 1615
+# https://leetcode.com/problems/maximal-network-rank/
 
-class Solution:
-    def minMutation(self, start: str, end: str, bank: List[str]) -> int:
-        if end not in bank: return -1
-        ans = self.f(start, end, bank, [])
-        if(ans==float('inf')): return -1
-        else: return ans    
-            
-    def d(self, s1, s2, c=0):
-        for z in range(len(s1)):
-            if s1[z]!=s2[z]: c+=1
-            if c>1: return False
-        return c==1
-       
-    def f(self, start, end, bank, path):
-        if self.d(start, end): return 1
-        else:
-            k = float('inf')
-            for z in bank:
-                if(z!=end and self.d(start, z) and z not in path):
-                    k = min(1+self.f(z, end, bank, path+[z]), k)
-            return k
+cclass Solution:
+    def maximalNetworkRank(self, n: int, roads: List[List[int]]) -> int:
+        if not roads: return 0
+        c2cs = defaultdict(set)
+        for r in roads:
+            c2cs[r[0]].add(r[1])
+            c2cs[r[1]].add(r[0])
+        h = list()
+        for c, conns in c2cs.items():
+            heapq.heappush(h, (-len(conns), c, tuple(conns)))
+        firstcity = heapq.heappop(h)
+        secondcity = heapq.heappop(h)
+        firstrank = firstcity[0]
+        secondrank = secondcity[0]
+        cs_to_compare = [firstcity, secondcity]
+        while h and h[0][0] == secondrank:
+            cs_to_compare.append(heapq.heappop(h))
+        #print(cs_to_compare)
+        for i in range(len(cs_to_compare)-1):
+            for j in range(i+1, len(cs_to_compare)):
+                c1 = cs_to_compare[i]
+                c2 = cs_to_compare[j]
+                is_connected = c1[1] in c2[2]
+                nr = -c1[0] + (-c2[0]) - is_connected
+                if nr == -firstrank + -secondrank: return nr
+        return -firstrank + -secondrank - 1

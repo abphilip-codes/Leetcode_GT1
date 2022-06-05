@@ -1,4 +1,4 @@
-# 785
+# 785 
 # https://leetcode.com/problems/is-graph-bipartite/
 
 class Solution:

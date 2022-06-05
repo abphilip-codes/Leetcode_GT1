@@ -1,4 +1,4 @@
-# 1615
+# 1615 
 # https://leetcode.com/problems/maximal-network-rank/
 
 cclass Solution:

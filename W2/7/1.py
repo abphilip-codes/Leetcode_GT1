@@ -4,26 +4,24 @@
 cclass Solution:
     def maximalNetworkRank(self, n: int, roads: List[List[int]]) -> int:
         if not roads: return 0
-        c2cs = defaultdict(set)
+        c = defaultdict(set)
         for r in roads:
-            c2cs[r[0]].add(r[1])
-            c2cs[r[1]].add(r[0])
-        h = list()
-        for c, conns in c2cs.items():
-            heapq.heappush(h, (-len(conns), c, tuple(conns)))
-        firstcity = heapq.heappop(h)
-        secondcity = heapq.heappop(h)
-        firstrank = firstcity[0]
-        secondrank = secondcity[0]
-        cs_to_compare = [firstcity, secondcity]
-        while h and h[0][0] == secondrank:
-            cs_to_compare.append(heapq.heappop(h))
-        #print(cs_to_compare)
-        for i in range(len(cs_to_compare)-1):
-            for j in range(i+1, len(cs_to_compare)):
-                c1 = cs_to_compare[i]
-                c2 = cs_to_compare[j]
-                is_connected = c1[1] in c2[2]
-                nr = -c1[0] + (-c2[0]) - is_connected
-                if nr == -firstrank + -secondrank: return nr
-        return -firstrank + -secondrank - 1
+            c[r[0]].add(r[1])
+            c[r[1]].add(r[0])
+        h = []
+        for k1, k2 in c.items():
+            heapq.heappush(h, (-len(k2), k1, tuple(k2)))
+        a1 = heapq.heappop(h)
+        a2 = heapq.heappop(h)
+        b1 = a1[0]
+        b2 = a2[0]
+        p = [a1, a2]
+        while(h and h[0][0]==b2):
+            p.append(heapq.heappop(h))
+        for z in range(len(p)-1):
+            for y in range(z+1, len(p)):
+                c1, c2 = p[z], p[y]
+                l = c1[1] in c2[2]
+                d = -c1[0] + (-c2[0]) - l
+                if(d==-b1+-b2): return d
+        return -b1+-b2-1

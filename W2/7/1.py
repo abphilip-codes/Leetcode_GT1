@@ -1,7 +1,7 @@
 # 1615 
 # https://leetcode.com/problems/maximal-network-rank/
 
-cclass Solution:
+class Solution:
     def maximalNetworkRank(self, n: int, roads: List[List[int]]) -> int:
         if not roads: return 0
         c = defaultdict(set)

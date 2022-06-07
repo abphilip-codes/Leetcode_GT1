@@ -3,23 +3,20 @@
 
 class Solution:
     def isBipartite(self, graph: List[List[int]]) -> bool:
-        def bipar(src,color):
-            color[src]=1
-            queue=[]
-            queue.append(src)
-            while (queue):
-                top=queue.pop()
-                for neigh in graph[top]:
-                    if color[neigh]==-1:
-                        color[neigh]=1-color[top]
-                        queue.append(neigh)
-                    elif color[neigh]==color[top]:
-                        return False
+        def f(s, k):
+            k[s], q = 1, []
+            q.append(s)
+            while(q):
+                top = q.pop()
+                for z in graph[top]:
+                    if(k[z]==-1):
+                        k[z]=1-k[top]
+                        q.append(z)
+                    elif(k[z]==k[top]): return False
             return True
-        n=len(graph)
-        color=[-1]*n
-        for i in range(n):
-            if color[i]==-1:
-                if not bipar(i,color):
-                    return False
+        n = len(graph)
+        k = [-1]*n
+        for z in range(n):
+            if(k[z]==-1):
+                if not f(z, k): return False
         return True
